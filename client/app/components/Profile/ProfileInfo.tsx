@@ -17,6 +17,8 @@ type Props = {
 
 const ProfileInfo: FC<Props> = ({ avatar, user }) => {
   const [name, setName] = useState(user && user.name);
+  const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
+
   const [updateAvatar, { isSuccess, error }] = useUpdateAvatarMutation();
   const [editProfile, { isSuccess: success, error: updateError }] =
     useEditProfileMutation();
@@ -53,6 +55,15 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
     if (name !== "") {
       await editProfile({
         name: name,
+      });
+    }
+  };
+
+  const handleSubmitPhone = async (phone: any) => {
+    phone.preventDefault();
+    if (phoneNumber !== "") {
+      await editProfile({
+        phoneNumber: phoneNumber,
       });
     }
   };
@@ -98,6 +109,19 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
+                
+            <div className="w-[100%]">
+              <label className="block pb-2">Mobile Number</label>
+              <input
+                type="number"
+                className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                // readOnly
+                required
+                value={phoneNumber}
+                onChange={(phone) => setPhoneNumber(phone.target.value)}
+              />
+            </div>
+
             <div className="w-[100%] pt-2">
               <label className="block pb-2">Email Address</label>
               <input

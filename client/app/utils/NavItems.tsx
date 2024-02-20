@@ -14,14 +14,24 @@ export const navItemsData = [
     name: "About",
     url: "/about",
   },
+  // {
+  //   name: "Policy",
+  //   url: "/policy",
+  // },
+  // {
+  //   name: "FAQ",
+  //   url: "/faq",
+  // },
   {
-    name: "Policy",
-    url: "/policy",
+     name:"Notes",
+     url:"/notes",
   },
   {
-    name: "FAQ",
-    url: "/faq",
-  },
+    name:"Test",
+    url:"/test"
+
+  }
+
 ];
 
 type Props = {

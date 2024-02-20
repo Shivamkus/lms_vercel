@@ -28,6 +28,10 @@ const schema = Yup.object().shape({
 
 const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
   const [show, setShow] = useState(false);
+
+  // here i am ading some new usestate for the  Make Password Strength Indicator
+  const [passwordStrength, setPasswordStrength] = useState(0);
+
   const [login, { isSuccess, error }] = useLoginMutation();
   const formik = useFormik({
     initialValues: { email: "", password: "" },
@@ -50,6 +54,25 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
       }
     }
   }, [isSuccess, error]);
+
+
+  const checkPasswordStrength = (password: string | any[]) => {
+    // You can implement your own logic to determine password strength.
+    // For example, check for minimum length, presence of special characters, numbers, etc.
+    let strength = 0;
+
+    // Check for minimum length
+    if (password.length <= 6) {
+      strength = 1; // Weak
+    } else if (password.length <= 8) {
+      strength = 2; // Medium
+    } else {
+      strength = 3; // Strong
+    }
+
+    setPasswordStrength(strength);
+  };
+
 
   const { errors, touched, values, handleChange, handleSubmit } = formik;
 
@@ -74,6 +97,7 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
         {errors.email && touched.email && (
           <span className="text-red-500 pt-2 block">{errors.email}</span>
         )}
+
         <div className="w-full mt-5 relative mb-1">
           <label className={`${styles.label}`} htmlFor="email">
             Enter your password
@@ -82,7 +106,11 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
             type={!show ? "password" : "text"}
             name="password"
             value={values.password}
-            onChange={handleChange}
+            // onChange={handleChange}
+            onChange={(e) => {
+              handleChange(e);
+              checkPasswordStrength(e.target.value);
+            }}
             id="password"
             placeholder="password!@%"
             className={`${
@@ -105,7 +133,37 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
           {errors.password && touched.password && (
             <span className="text-red-500 pt-2 block">{errors.password}</span>
           )}
-        </div>
+
+          </div>
+
+          {/* Password Strength Indicator */}
+          {values.password && (
+            <div className="mt-2">
+              <div className="bg-gray-200 h-2 rounded">
+                <div
+                  className={`${
+                    passwordStrength === 1
+                      ? "bg-red-500"
+                      : passwordStrength === 2
+                      ? "bg-orange-500"
+                      : "bg-green-500"
+                  } h-2 rounded`}
+                  style={{ width: `${(passwordStrength / 3) * 100}%` }}
+                ></div>
+              </div>
+              <p className="text-xs mt-1">
+                Password Strength:{" "}
+                {passwordStrength === 1
+                  ? "Weak"
+                  : passwordStrength === 2
+                  ? "Medium"
+                  : "Strong"}
+              </p>
+            </div>
+            )}
+          
+
+
         <div className="w-full mt-5">
           <input type="submit" value="Login" className={`${styles.button}`} />
         </div>

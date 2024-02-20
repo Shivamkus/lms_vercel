@@ -96,6 +96,8 @@ const courseSchema = new Schema<ICourse>({
   categories:{
     type:String,
     required: true,
+    // default: "web development",
+
   },
   price: {
     type: Number,

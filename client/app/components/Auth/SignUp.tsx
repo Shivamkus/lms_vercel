@@ -26,6 +26,9 @@ const schema = Yup.object().shape({
 
 const Signup: FC<Props> = ({ setRoute }) => {
   const [show, setShow] = useState(false);
+  // here i am ading some new usestate for the  Make Password Strength Indicator
+  const [passwordStrength, setPasswordStrength] = useState(0);
+
   const [register,{data,error,isSuccess}] = useRegisterMutation(); 
 
   useEffect(() => {
@@ -44,15 +47,35 @@ const Signup: FC<Props> = ({ setRoute }) => {
   
 
   const formik = useFormik({
-    initialValues: { name: "", email: "", password: "" },
+    initialValues: { name: "", email: "",phoneNumber:" " , password: "" },
     validationSchema: schema,
-    onSubmit: async ({name, email, password }) => {
+    onSubmit: async ({name, email, phoneNumber, password }) => {
       const data = {
-        name,email,password
+        name,email, phoneNumber, password
       };
       await register(data);
     },
   });
+
+
+
+  
+  const checkPasswordStrength = (password: string | any[]) => {
+    // You can implement your own logic to determine password strength.
+    // For example, check for minimum length, presence of special characters, numbers, etc.
+    let strength = 0;
+
+    // Check for minimum length
+    if (password.length <= 6) {
+      strength = 1; // Weak
+    } else if (password.length <= 8) {
+      strength = 2; // Medium
+    } else {
+      strength = 3; // Strong
+    }
+
+    setPasswordStrength(strength);
+  };
 
   const { errors, touched, values, handleChange, handleSubmit } = formik;
 
@@ -96,7 +119,30 @@ const Signup: FC<Props> = ({ setRoute }) => {
         {errors.email && touched.email && (
           <span className="text-red-500 pt-2 block">{errors.email}</span>
         )}
-        <div className="w-full mt-5 relative mb-1">
+
+          <div className="mb-3">
+          <label className={`${styles.label}`} htmlFor="email">
+            Enter your Mobile number
+          </label>
+          <input
+            type="number"
+            name="phoneNumber"
+            value={values.phoneNumber}
+            onChange={handleChange}
+            id="number"
+            placeholder="Enter your Number"
+            className={`${errors.phoneNumber && touched.phoneNumber && "border-red-500"} ${
+              styles.input
+            }`}
+          />
+          {errors.name && touched.name && (
+            <span className="text-red-500 pt-2 block">{errors.phoneNumber}</span>
+          )}
+        </div>
+
+
+
+        {/* <div className="w-full mt-5 relative mb-1">
           <label className={`${styles.label}`} htmlFor="email">
             Enter your password
           </label>
@@ -127,7 +173,74 @@ const Signup: FC<Props> = ({ setRoute }) => {
         </div>
         {errors.password && touched.password && (
           <span className="text-red-500 pt-2 block">{errors.password}</span>
-        )}
+        )} */}
+
+            <div className="w-full mt-5 relative mb-1">
+            <label className={`${styles.label}`} htmlFor="password">
+              Enter your password
+            </label>
+            <input
+              type={!show ? "password" : "text"}
+              name="password"
+              value={values.password}
+              onChange={(e) => {
+                handleChange(e);
+                checkPasswordStrength(e.target.value);
+              }}
+              id="password"
+              placeholder="password!@%"
+              className={`${
+                errors.password && touched.password && "border-red-500"
+              } ${styles.input}`}
+            />
+            {!show ? (
+              <AiOutlineEyeInvisible
+                className="absolute bottom-3 right-2 z-1 cursor-pointer"
+                size={20}
+                onClick={() => setShow(true)}
+              />
+            ) : (
+              <AiOutlineEye
+                className="absolute bottom-3 right-2 z-1 cursor-pointer"
+                size={20}
+                onClick={() => setShow(false)}
+              />
+            )}
+          </div>
+          {errors.password && touched.password && (
+            <span className="text-red-500 pt-2 block">{errors.password}</span>
+          )}
+
+          {/* Password Strength Indicator */}
+          {values.password && (
+            <div className="mt-2">
+              <div className="bg-gray-200 h-2 rounded">
+                <div
+                  className={`${
+                    passwordStrength === 1
+                      ? "bg-red-500"
+                      : passwordStrength === 2
+                      ? "bg-orange-500"
+                      : "bg-green-500"
+                  } h-2 rounded`}
+                  style={{ width: `${(passwordStrength / 3) * 100}%` }}
+                ></div>
+              </div>
+              <p className="text-xs mt-1">
+                Password Strength:{" "}
+                {passwordStrength === 1
+                  ? "Weak"
+                  : passwordStrength === 2
+                  ? "Medium"
+                  : "Strong"}
+              </p>
+            </div>
+          )}
+
+
+
+
+        
         <div className="w-full mt-5">
           <input type="submit" value="Sign Up" className={`${styles.button}`} />
         </div>
