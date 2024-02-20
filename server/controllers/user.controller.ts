@@ -24,6 +24,7 @@ import cloudinary from "cloudinary";
 interface IRegistrationBody {
   name: string;
   email: string;
+  phoneNumber: number;
   password: string;
   avatar?: string;
 }
@@ -31,7 +32,7 @@ interface IRegistrationBody {
 export const registrationUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, phoneNumber, password } = req.body;
 
       const isEmailExist = await userModel.findOne({ email });
       if (isEmailExist) {
@@ -41,6 +42,7 @@ export const registrationUser = CatchAsyncError(
       const user: IRegistrationBody = {
         name,
         email,
+        phoneNumber,
         password,
       };
 
@@ -119,7 +121,7 @@ export const activateUser = CatchAsyncError(
         return next(new ErrorHandler("Invalid activation code", 400));
       }
 
-      const { name, email, password } = newUser.user;
+      const { name, email, phoneNumber , password } = newUser.user;
 
       const existUser = await userModel.findOne({ email });
 
@@ -129,11 +131,13 @@ export const activateUser = CatchAsyncError(
       const user = await userModel.create({
         name,
         email,
+        phoneNumber,
         password,
       });
 
       res.status(201).json({
         success: true,
+        
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
