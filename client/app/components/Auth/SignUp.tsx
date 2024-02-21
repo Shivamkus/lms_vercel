@@ -43,7 +43,7 @@ const Signup: FC<Props> = ({ setRoute }) => {
       toast.error(errorData.data.message);
     }
    }
-  }, [isSuccess,error]);
+  }, [isSuccess, error, data?.message, setRoute]);
   
 
   const formik = useFormik({

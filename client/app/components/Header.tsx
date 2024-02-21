@@ -56,7 +56,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
           setLogout(true);
       }
     }
-  }, [data, userData,isLoading]);
+  }, [data, userData, isLoading, socialAuth, refetch, isSuccess]);
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {

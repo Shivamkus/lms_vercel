@@ -161,16 +161,7 @@ const CourseContentMedia = ({
         toast.error(errorMessage.data.message);
       }
     }
-  }, [
-    isSuccess,
-    error,
-    answerSuccess,
-    answerError,
-    reviewSuccess,
-    reviewError,
-    replySuccess,
-    replyError,
-  ]);
+  }, [isSuccess, error, answerSuccess, answerError, reviewSuccess, reviewError, replySuccess, replyError, refetch, data, activeVideo, user._id, user.role, courseRefetch]);
 
   const handleAnswerSubmit = () => {
     addAnswerInQuestion({

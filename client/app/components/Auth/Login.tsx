@@ -53,7 +53,7 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
         toast.error(errorData.data.message);
       }
     }
-  }, [isSuccess, error]);
+  }, [isSuccess, error, setOpen, refetch]);
 
 
   const checkPasswordStrength = (password: string | any[]) => {

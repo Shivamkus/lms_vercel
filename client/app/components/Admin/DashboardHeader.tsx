@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { ThemeSwitcher } from "@/app/utils/ThemeSwitcher";
 import {
@@ -44,14 +45,14 @@ const DashboardHeader: FC<Props> = ({ open, setOpen }) => {
       refetch();
     }
     audio.load();
-  }, [data, isSuccess,audio]);
+  }, [data, isSuccess, audio, refetch]);
 
   useEffect(() => {
     socketId.on("newNotification", (data) => {
       refetch();
       playNotificationSound();
     });
-  }, []);
+  }, [playNotificationSound, refetch]);
 
   const handleNotificationStatusChange = async (id: string) => {
     await updateNotificationStatus(id);
