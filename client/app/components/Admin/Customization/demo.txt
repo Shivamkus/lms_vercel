@@ -383,3 +383,33 @@ const EditCategories = (props: Props) => {
 
 export default EditCategories;
 
+
+
+
+
+
+
+
+
+
+
+useEffect(() => {
+  if (data && data.layout && data.layout.categories) {
+    setCategories(data.layout.categories);
+  } else {
+    // If data.layout.categories is null, set an empty array as a default value
+    setCategories([]);
+  }
+
+  if (layoutSuccess) {
+    refetch();
+    toast.success("Categories updated successfully");
+  }
+
+  if (error) {
+    if ("data" in error) {
+      const errorData = error as any;
+      toast.error(errorData?.data?.message);
+    }
+  }
+}, [data, layoutSuccess, error, refetch]);
